@@ -1,33 +1,38 @@
 # Nepal SEO Expert
 
-**Version 1.1.0** · A reusable, read-only SEO, AEO, GEO, and Nepal local SEO audit skill.
+**Version 1.2.0** · A reusable, tested, read-only SEO, AEO, GEO, and Nepal local SEO audit skill.
 
 Give it a website URL or project folder. It finds SEO issues, explains what matters, and gives a clear plan. It does **not** change website files until you approve specific fixes.
 
 ## Quick start
 
-These commands are for macOS, Linux, or WSL. First download the skill:
+These commands are for macOS, Linux, or WSL. First download version 1.2.0:
 
 ```bash
-git clone --depth 1 https://github.com/1abhishek0948/Nepal-SEO-Expert.git ~/nepal-seo-expert
+git clone --depth 1 --branch v1.2.0 https://github.com/1abhishek0948/Nepal-SEO-Expert.git ~/nepal-seo-expert
 ```
 
-Then choose the tool you use below. Copy the **whole** `nepal-seo-expert` folder, not only `SKILL.md`; the scripts and reference guides are part of the skill.
+Then choose the tool you use below. The installer copies the **whole** skill folder, including its scripts and reference guides. It never overwrites an existing installation.
+
+| Tool | Install for all projects | Install in one project |
+|---|---|---|
+| Claude Code | `~/.claude/skills/nepal-seo-expert` | `.claude/skills/nepal-seo-expert` |
+| OpenCode | `~/.config/opencode/skills/nepal-seo-expert` | `.opencode/skills/nepal-seo-expert` |
+| Codex | `~/.codex/skills/nepal-seo-expert` | `.codex/skills/nepal-seo-expert` |
+| Compatible agent tools | `~/.agents/skills/nepal-seo-expert` | `.agents/skills/nepal-seo-expert` |
 
 ### Claude Code
 
 Install for all your projects:
 
 ```bash
-mkdir -p ~/.claude/skills
-cp -R ~/nepal-seo-expert ~/.claude/skills/
+sh ~/nepal-seo-expert/install.sh claude global
 ```
 
 Or install only in the current project:
 
 ```bash
-mkdir -p .claude/skills
-cp -R ~/nepal-seo-expert .claude/skills/
+sh ~/nepal-seo-expert/install.sh claude project
 ```
 
 Start a new Claude Code session in the website project, then ask:
@@ -39,15 +44,13 @@ Start a new Claude Code session in the website project, then ask:
 Install for all your projects:
 
 ```bash
-mkdir -p ~/.config/opencode/skills
-cp -R ~/nepal-seo-expert ~/.config/opencode/skills/
+sh ~/nepal-seo-expert/install.sh opencode global
 ```
 
 Or install only in the current project:
 
 ```bash
-mkdir -p .opencode/skills
-cp -R ~/nepal-seo-expert .opencode/skills/
+sh ~/nepal-seo-expert/install.sh opencode project
 ```
 
 OpenCode discovers the skill automatically. Start it in the website project and ask:
@@ -59,15 +62,13 @@ OpenCode discovers the skill automatically. Start it in the website project and 
 Install for all your projects:
 
 ```bash
-mkdir -p ~/.codex/skills
-cp -R ~/nepal-seo-expert ~/.codex/skills/
+sh ~/nepal-seo-expert/install.sh codex global
 ```
 
 Or install only in the current project:
 
 ```bash
-mkdir -p .codex/skills
-cp -R ~/nepal-seo-expert .codex/skills/
+sh ~/nepal-seo-expert/install.sh codex project
 ```
 
 Open a new Codex chat in the website project and ask:
@@ -79,8 +80,7 @@ Open a new Codex chat in the website project and ask:
 Many coding agents use the same `SKILL.md` format. The usual project location is `.agents/skills`:
 
 ```bash
-mkdir -p .agents/skills
-cp -R ~/nepal-seo-expert .agents/skills/
+sh ~/nepal-seo-expert/install.sh agents project
 ```
 
 If your tool uses another skills folder, copy the complete folder there and keep this final path:
@@ -112,12 +112,22 @@ The skill will not claim that every site needs every file. For example, `llms.tx
 - GEO: search, training, AI-search, and user-triggered crawler access as separate choices.
 - Nepal local SEO: English, Nepali, and Roman Nepali language relevance; real NAP details; genuine service areas; and local schema.
 
+## Why you can trust the workflow
+
+- **Safe by default:** audits are read-only and implementation requires approval.
+- **No fake requirements:** optional files are labelled optional; the skill does not claim `gemini.txt` is a standard.
+- **No invented data:** findings must show evidence and distinguish verified facts from assumptions.
+- **Tested on every change:** GitHub Actions checks package structure, compiles scripts, tests the installer and auditors, and checks shell syntax.
+- **Learn by example:** see the clearly fictional reports in `examples/` for the expected report format.
+
 ## What is inside
 
 ```
 nepal-seo-expert/
 ├── SKILL.md                      # Workflow, ground rules, routing
 ├── README.md                     # This file
+├── install.sh                    # Safe one-command installer
+├── examples/                     # Clearly fictional example audit reports
 ├── references/                   # Detailed guidance, loaded only when needed
 │   ├── technical-seo.md          # Crawling, indexing, canonicals, sitemaps, CWV, hreflang
 │   ├── site-files-and-crawler-access.md # Applicable files, crawler purpose, safe generation
@@ -239,6 +249,8 @@ Run through this after installing or modifying the skill.
 **Scripts** (from the skill folder)
 - [ ] `python3 -m py_compile scripts/*.py` succeeds
 - [ ] `python3 -m unittest discover -s tests -p 'test_*.py'` succeeds
+- [ ] `python3 scripts/validate-skill.py .` succeeds
+- [ ] `sh -n install.sh` succeeds
 - [ ] `python3 scripts/metadata-audit.py tests/sample-site` flags the issues in `bad.html`, `spa.html`, `template.html` and the duplicate pair, and reports no findings for `good.html`
 - [ ] `python3 scripts/schema-audit.py tests/sample-site/bad.html tests/sample-site/bad-local.html` reports invalid JSON, placeholders, 0,0 coordinates and missing properties
 - [ ] `python3 scripts/sitemap-audit.py tests/sample-site/sitemap-bad.xml` reports duplicates, mixed hosts and protocols, bad and future lastmod; `sitemap-good.xml` reports none
@@ -248,6 +260,7 @@ Run through this after installing or modifying the skill.
 
 **Discovery and invocation**
 - [ ] The skill is found from the documented Claude Code, OpenCode, Codex, or `.agents` folder
+- [ ] `sh install.sh codex project` installs the whole skill and refuses to overwrite an existing install
 - [ ] An explicit prompt such as `Use $nepal-seo-expert to audit this site` loads the skill
 - [ ] A prompt such as "audit my site's SEO" triggers it without naming it
 

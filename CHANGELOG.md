@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.0 — 2026-11-04
+
+- Added a safe one-command installer for Claude Code, OpenCode, Codex, and Agent Skills-compatible project folders. It copies the complete skill, excludes `.git`, and refuses to overwrite an existing installation.
+- Added repository-owned package validation, installer tests, and a GitHub Actions workflow that runs on every push and pull request.
+- Added clearly labelled fictional local-business and ecommerce audit examples, so users can see the evidence-based reporting standard without mistaking sample data for real results.
+- Simplified README installation and usage instructions for Claude Code, OpenCode, Codex, and compatible tools.
+
 ## 1.1.0 — 2026-11-04
 
 - Added a conditional SEO/AEO/GEO file applicability matrix: robots, sitemap variants, `llms.txt`, `ads.txt`, `security.txt`, webmaster verification, and the explicit non-standard status of `gemini.txt`.
