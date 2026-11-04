@@ -1,16 +1,122 @@
-# nepal-seo-expert
+# Nepal SEO Expert
 
-**Version 1.1.0** — comprehensive, read-only SEO / AEO / GEO audit workflow.
+**Version 1.1.0** · A reusable, read-only SEO, AEO, GEO, and Nepal local SEO audit skill.
 
-A reusable AI skill that helps coding agents audit and improve websites for **SEO**, **AEO** (answer engine optimization) and **GEO** (generative engine optimization), with a dedicated **Nepal and local SEO** module. It works on any website and tech stack, and supports international SEO too.
+Give it a website URL or project folder. It finds SEO issues, explains what matters, and gives a clear plan. It does **not** change website files until you approve specific fixes.
 
-It does not promise rankings, traffic or AI citations. It never invents metrics, search volumes, competitor data or business details. It audits first, waits for your approval, and only then changes code.
+## Quick start
+
+These commands are for macOS, Linux, or WSL. First download the skill:
+
+```bash
+git clone --depth 1 https://github.com/1abhishek0948/Nepal-SEO-Expert.git ~/nepal-seo-expert
+```
+
+Then choose the tool you use below. Copy the **whole** `nepal-seo-expert` folder, not only `SKILL.md`; the scripts and reference guides are part of the skill.
+
+### Claude Code
+
+Install for all your projects:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R ~/nepal-seo-expert ~/.claude/skills/
+```
+
+Or install only in the current project:
+
+```bash
+mkdir -p .claude/skills
+cp -R ~/nepal-seo-expert .claude/skills/
+```
+
+Start a new Claude Code session in the website project, then ask:
+
+> Use the nepal-seo-expert skill to audit this website for SEO, AEO, and GEO. Report only; do not change files yet.
+
+### OpenCode
+
+Install for all your projects:
+
+```bash
+mkdir -p ~/.config/opencode/skills
+cp -R ~/nepal-seo-expert ~/.config/opencode/skills/
+```
+
+Or install only in the current project:
+
+```bash
+mkdir -p .opencode/skills
+cp -R ~/nepal-seo-expert .opencode/skills/
+```
+
+OpenCode discovers the skill automatically. Start it in the website project and ask:
+
+> Use the nepal-seo-expert skill. Audit this site for SEO, AEO, GEO, and Nepal local SEO. Give me a report first.
+
+### Codex
+
+Install for all your projects:
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R ~/nepal-seo-expert ~/.codex/skills/
+```
+
+Or install only in the current project:
+
+```bash
+mkdir -p .codex/skills
+cp -R ~/nepal-seo-expert .codex/skills/
+```
+
+Open a new Codex chat in the website project and ask:
+
+> Use `$nepal-seo-expert` to audit this project. Check SEO, AEO, GEO, technical files, and Nepal local relevance. Report only; wait for my approval before changing anything.
+
+### Other Agent Skills-compatible tools
+
+Many coding agents use the same `SKILL.md` format. The usual project location is `.agents/skills`:
+
+```bash
+mkdir -p .agents/skills
+cp -R ~/nepal-seo-expert .agents/skills/
+```
+
+If your tool uses another skills folder, copy the complete folder there and keep this final path:
+
+```text
+<skills-folder>/nepal-seo-expert/SKILL.md
+```
+
+## How to use it
+
+Start with an audit. Good first prompts:
+
+> Audit https://example.com for SEO, AEO, and GEO. We serve Kathmandu and Pokhara. Report only; do not change files.
+
+> Use the nepal-seo-expert skill to review this project. Check metadata, schema, sitemap, robots.txt, crawler access, performance, and Nepal local SEO.
+
+After you read the report, approve only the items you want:
+
+> Implement findings T-01 and G-02. Keep the current framework and show me how you validated the changes.
+
+The skill will not claim that every site needs every file. For example, `llms.txt` is optional, `ads.txt` applies only to sites selling programmatic ads, and `gemini.txt` is not a web standard.
+
+## What it checks
+
+- Technical SEO: indexing, canonicals, robots.txt, sitemaps, redirects, rendered HTML, mobile, and performance signals.
+- On-page SEO: titles, descriptions, headings, links, images, and content quality.
+- Structured data: JSON-LD and schema consistency with visible content.
+- AEO: direct answers, useful FAQs, sources, clear explanations, and accessible HTML.
+- GEO: search, training, AI-search, and user-triggered crawler access as separate choices.
+- Nepal local SEO: English, Nepali, and Roman Nepali language relevance; real NAP details; genuine service areas; and local schema.
 
 ## What is inside
 
 ```
 nepal-seo-expert/
-├── SKILL.md                      # Workflow, ground rules, routing (the file Claude reads first)
+├── SKILL.md                      # Workflow, ground rules, routing
 ├── README.md                     # This file
 ├── references/                   # Detailed guidance, loaded only when needed
 │   ├── technical-seo.md          # Crawling, indexing, canonicals, sitemaps, CWV, hreflang
@@ -31,52 +137,16 @@ nepal-seo-expert/
 └── tests/sample-site/            # Sample HTML and sitemaps with known issues, for testing the scripts
 ```
 
-## Install
-
-### Claude Code (personal, available in every project)
-
-```bash
-mkdir -p ~/.claude/skills
-cp -r nepal-seo-expert ~/.claude/skills/
-```
-
-### Claude Code (one project only, shareable through git)
-
-```bash
-mkdir -p .claude/skills
-cp -r /path/to/nepal-seo-expert .claude/skills/
-```
-
-Restart Claude Code (or start a new session) so it discovers the skill. Then confirm:
-
-1. Ask: `What skills do you have available?` and check that `nepal-seo-expert` is listed.
-2. Or type `/nepal-seo-expert` to invoke it directly.
-
-Keep the folder name equal to the `name` in SKILL.md (`nepal-seo-expert`), and keep `SKILL.md` at the folder root.
-
-### Claude.ai or Claude desktop
-
-Upload the packaged `nepal-seo-expert.skill` file under Settings > Capabilities > Skills (the location of this setting can change; check the current Claude Help Center). Script execution needs a code-execution-enabled environment.
-
-### Requirements
+## Requirements
 
 - Python 3.8 or newer for the scripts. No pip installs, no API keys, no paid services.
 - Network access only if you audit live URLs. Local HTML files and sitemaps need none.
 - If your network uses a proxy and you audit localhost, set `no_proxy=127.0.0.1,localhost`.
 
-## How to use
-
-Just describe the job. The skill triggers on SEO, indexing, sitemap, schema, Core Web Vitals, AI search visibility, Business Profile and Nepal local search topics. A normal run looks like this:
-
-1. You give a URL and/or project folder.
-2. Claude identifies the site type and target market, inspects the stack, classifies which files actually apply, runs the scripts, and writes the audit report.
-3. Claude stops and asks which items to implement. **No files are changed during the audit.**
-4. After you approve, Claude implements only those items, then validates and reports what it could and could not verify.
-
-### Running the scripts yourself
+## Run the audit scripts yourself
 
 ```bash
-cd ~/.claude/skills/nepal-seo-expert/scripts
+cd ~/nepal-seo-expert/scripts
 
 python3 sitemap-audit.py https://example.com/sitemap.xml
 python3 sitemap-audit.py ./sitemap.xml --check-status 20      # optional: HEAD-check 20 sampled URLs
@@ -152,7 +222,7 @@ Implementation after the audit
 - Read-only audit; changes only after explicit approval.
 - No keyword stuffing, cloaking, hidden text, link schemes, doorway pages, fake reviews, fake addresses, duplicate business profiles or schema for content that is not visible.
 - No fabricated metrics. Findings are labeled Verified or Assumption.
-- Official Google Search Central guidance is the reference for anything version-sensitive. Verify current details before relying on them (rich result eligibility, crawler names, thresholds).
+- Use current official documentation from Google and the relevant crawler vendor for version-sensitive details such as rich-result eligibility, crawler names, and performance thresholds.
 - Scripts avoid third-party dependencies, never touch API keys, and never overwrite project files.
 - Missing optional files are not presented as errors. The skill never invents webmaster verification tokens, ad seller IDs, security contacts, or business details.
 
@@ -176,19 +246,19 @@ Run through this after installing or modifying the skill.
 - [ ] `python3 scripts/site-files-audit.py tests/site-files --format json` reports the applicability matrix, does not recommend `gemini.txt`, and keeps verification token values out of output
 - [ ] Scripts leave the audited folder unchanged (check `git status` or file timestamps)
 
-**Discovery and invocation (Claude Code)**
-- [ ] The skill appears when you ask for available skills
-- [ ] `/nepal-seo-expert` invokes it
+**Discovery and invocation**
+- [ ] The skill is found from the documented Claude Code, OpenCode, Codex, or `.agents` folder
+- [ ] An explicit prompt such as `Use $nepal-seo-expert to audit this site` loads the skill
 - [ ] A prompt such as "audit my site's SEO" triggers it without naming it
 
 **Behavior**
 - [ ] The first response is an audit, not code edits
-- [ ] Claude asks for approval before changing files
+- [ ] The agent asks for approval before changing files
 - [ ] The report uses all seven fields per finding and labels Verified vs Assumption
 - [ ] No invented numbers (volumes, rankings, competitor metrics)
 - [ ] Nepal module is applied for a Nepal-targeted site and skipped for a non-Nepal one
-- [ ] Claude says what it cannot validate itself (Search Console, Rich Results Test, field Core Web Vitals)
-- [ ] Claude refuses fake reviews, fake addresses, doorway pages and similar requests
+- [ ] The agent says what it cannot validate itself (Search Console, Rich Results Test, field Core Web Vitals)
+- [ ] The agent refuses fake reviews, fake addresses, doorway pages and similar requests
 
 ## Maintenance
 
