@@ -43,7 +43,7 @@ import urllib.request
 import gzip
 from html.parser import HTMLParser
 
-UA = "nepal-seo-expert-audit/1.0 (read-only SEO audit script)"
+UA = "nepal-seo-expert-audit/1.1 (read-only SEO audit script)"
 MAX_BYTES = 10 * 1024 * 1024
 SEVERITIES = ["Critical", "High", "Medium", "Low", "Info"]
 

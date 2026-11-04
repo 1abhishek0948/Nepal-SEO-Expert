@@ -46,7 +46,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
 
-UA = "nepal-seo-expert-audit/1.0 (read-only SEO audit script)"
+UA = "nepal-seo-expert-audit/1.1 (read-only SEO audit script)"
 MAX_FETCH_BYTES = 60 * 1024 * 1024      # slightly above the 50 MB sitemap limit so oversize is detectable
 SITEMAP_URL_LIMIT = 50000
 SITEMAP_SIZE_LIMIT = 50 * 1024 * 1024

@@ -31,7 +31,7 @@ GEO means improving the odds that a site is understood, trusted and referenced b
 
 - Pages must be crawlable, indexable and fast, with main content in HTML text. See `technical-seo.md`.
 - Do not use `nosnippet`, `max-snippet:0` or similar directives on content you want shown in AI features, unless that is a deliberate business decision. Google's snippet controls also govern use in AI features.
-- Review robots.txt for AI crawlers. Allowing or blocking is a business decision; present trade-offs and let the owner decide. Verify current user-agent names in each vendor's documentation, because they change. Commonly documented ones at the time of writing:
+- Review robots.txt for AI crawlers. Allowing or blocking is a business decision; present trade-offs and let the owner decide. Verify current user-agent names and their rules in each vendor's documentation, because they change. Keep these decisions separate: search, training, AI/search retrieval, and user-triggered fetching are not one "AI" permission. Commonly documented examples at the time of writing:
 
 | Purpose | User-agent (verify) | Notes |
 |---|---|---|
@@ -39,13 +39,13 @@ GEO means improving the odds that a site is understood, trusted and referenced b
 | Google Gemini and Vertex training/grounding control | Google-Extended | Robots.txt control token; does not affect Search ranking or inclusion |
 | OpenAI search results | OAI-SearchBot | Allows appearance in ChatGPT search results |
 | OpenAI model training | GPTBot | Separate from search |
-| OpenAI user-initiated browsing | ChatGPT-User | Fetches pages when a user asks |
+| OpenAI user-initiated browsing | ChatGPT-User | Fetches pages when a user asks; OpenAI says robots rules may not apply to these user-initiated requests |
 | Perplexity search index | PerplexityBot | Verify in Perplexity's docs |
 | Anthropic | ClaudeBot, Claude-SearchBot, Claude-User | Verify in Anthropic's docs |
 
-  Blocking training crawlers while allowing search crawlers is a common choice, but it is the owner's decision. Robots.txt is advisory; reputable bots follow it.
+  Blocking training crawlers while allowing search crawlers is a common choice, but it is the owner's decision. Robots.txt is advisory; reputable bots follow it. Do not report a user-triggered fetcher as "blocked" only from robots.txt without confirming the vendor's current policy.
 - CDN, WAF and bot-protection rules sometimes block legitimate crawlers by accident. Check logs and test with the vendor's documented IP ranges or verification method instead of assuming.
-- `llms.txt`: a proposed community convention with no confirmed support from major search engines. Optional and harmless, but do not present it as a ranking or citation lever.
+- `llms.txt`: a proposed community convention with no confirmed support from major search engines. Optional and harmless when accurate, but do not present it as a ranking or citation lever. `gemini.txt` is not a standard; do not recommend it.
 - Render-critical content server-side. Many AI crawlers do not execute JavaScript.
 - Provide clean, stable URLs, descriptive titles, canonical tags and a working sitemap so engines can retrieve and attribute correctly.
 

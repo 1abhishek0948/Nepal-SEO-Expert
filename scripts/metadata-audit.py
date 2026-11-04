@@ -45,7 +45,7 @@ import urllib.parse
 import urllib.request
 from html.parser import HTMLParser
 
-UA = "nepal-seo-expert-audit/1.0 (read-only SEO audit script)"
+UA = "nepal-seo-expert-audit/1.1 (read-only SEO audit script)"
 MAX_BYTES = 10 * 1024 * 1024
 SEVERITIES = ["Critical", "High", "Medium", "Low", "Info"]
 HREFLANG_RE = re.compile(r"^(x-default|[a-z]{2,3}(-[A-Za-z]{4})?(-([A-Za-z]{2}|\d{3}))?)$")

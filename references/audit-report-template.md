@@ -39,6 +39,25 @@ Rules for the report:
 
 Cover: crawlability, indexability, canonicals, sitemap, robots.txt, redirects and status codes, HTTPS, mobile, Core Web Vitals, JavaScript rendering, structured data validity, hreflang.
 
+### Applicable-file matrix
+
+Record each item as **Present**, **Missing**, **Conditional**, **Optional**, or **Not applicable**. A missing conditional or optional file is not a defect by itself.
+
+| Item | Status | Applicability/evidence | Recommendation (if any) |
+|---|---|---|---|
+| robots.txt | | | |
+| Primary sitemap / sitemap index | | | |
+| News, image, video sitemap | | | |
+| llms.txt | | | |
+| gemini.txt | Do not create as a standard | | |
+| ads.txt | | | |
+| security.txt | | | |
+| Webmaster verification | | | |
+
+### Hosting, performance, and crawler access
+
+Cover existing hosting/CDN/WAF evidence, redirects and cache headers without changing them. Separate crawler policy and evidence by **search**, **training**, **AI/search retrieval**, and **user-triggered fetch**. State what cannot be verified without logs, vendor IP validation, Search Console, or field Core Web Vitals.
+
 [Findings in the format below]
 
 ## 4. On-page SEO findings

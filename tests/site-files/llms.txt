@@ -1,0 +1,3 @@
+# Example Nepal Business
+
+This is an optional fixture for the read-only audit test.

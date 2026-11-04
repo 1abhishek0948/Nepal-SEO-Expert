@@ -1,5 +1,7 @@
 # nepal-seo-expert
 
+**Version 1.1.0** — comprehensive, read-only SEO / AEO / GEO audit workflow.
+
 A reusable AI skill that helps coding agents audit and improve websites for **SEO**, **AEO** (answer engine optimization) and **GEO** (generative engine optimization), with a dedicated **Nepal and local SEO** module. It works on any website and tech stack, and supports international SEO too.
 
 It does not promise rankings, traffic or AI citations. It never invents metrics, search volumes, competitor data or business details. It audits first, waits for your approval, and only then changes code.
@@ -12,6 +14,7 @@ nepal-seo-expert/
 ├── README.md                     # This file
 ├── references/                   # Detailed guidance, loaded only when needed
 │   ├── technical-seo.md          # Crawling, indexing, canonicals, sitemaps, CWV, hreflang
+│   ├── site-files-and-crawler-access.md # Applicable files, crawler purpose, safe generation
 │   ├── on-page-seo.md            # Titles, descriptions, headings, links, images
 │   ├── aeo.md                    # Answer engines, FAQ/definition patterns, structured data
 │   ├── geo.md                    # AI Overviews, ChatGPT search, Perplexity, AI crawlers, measurement
@@ -22,6 +25,7 @@ nepal-seo-expert/
 │   └── audit-report-template.md  # Report structure and the 7-field finding format
 ├── scripts/                      # Read-only helpers, Python 3.8+ standard library only
 │   ├── sitemap-audit.py
+│   ├── site-files-audit.py        # Root files, crawler groups, hosting evidence (read-only)
 │   ├── metadata-audit.py
 │   └── schema-audit.py
 └── tests/sample-site/            # Sample HTML and sitemaps with known issues, for testing the scripts
@@ -65,7 +69,7 @@ Upload the packaged `nepal-seo-expert.skill` file under Settings > Capabilities 
 Just describe the job. The skill triggers on SEO, indexing, sitemap, schema, Core Web Vitals, AI search visibility, Business Profile and Nepal local search topics. A normal run looks like this:
 
 1. You give a URL and/or project folder.
-2. Claude identifies the site type and target market, inspects the stack, runs the scripts, and writes the audit report.
+2. Claude identifies the site type and target market, inspects the stack, classifies which files actually apply, runs the scripts, and writes the audit report.
 3. Claude stops and asks which items to implement. **No files are changed during the audit.**
 4. After you approve, Claude implements only those items, then validates and reports what it could and could not verify.
 
@@ -76,12 +80,31 @@ cd ~/.claude/skills/nepal-seo-expert/scripts
 
 python3 sitemap-audit.py https://example.com/sitemap.xml
 python3 sitemap-audit.py ./sitemap.xml --check-status 20      # optional: HEAD-check 20 sampled URLs
+python3 site-files-audit.py https://example.com --format markdown
+python3 site-files-audit.py ./dist --site-type ecommerce
 python3 metadata-audit.py https://example.com/ https://example.com/about
 python3 metadata-audit.py ./dist --format markdown            # folder of built HTML
 python3 schema-audit.py ./dist/products/*.html --format json
 ```
 
-All three accept `--help`. They read files or send GET (and, for sitemap status sampling, HEAD) requests with an identifying User-Agent and a delay, and never write to the audited project. They read server-rendered HTML only: metadata or JSON-LD added by JavaScript will not be seen, so confirm those cases with Search Console URL Inspection. Findings are heuristic evidence, not verdicts.
+All four accept `--help`. They read files or send GET (and, for sitemap status sampling, HEAD) requests with an identifying User-Agent and a delay, and never write to the audited project. They read server-rendered HTML only: metadata or JSON-LD added by JavaScript will not be seen, so confirm those cases with Search Console URL Inspection. Findings are heuristic evidence, not verdicts.
+
+### File and crawler applicability
+
+The audit does not prescribe a pile of files for every site. It reports each as expected, conditional, optional, or not applicable.
+
+| Item | When it applies |
+|---|---|
+| `robots.txt`, primary XML sitemap | A public site with crawlable canonical pages |
+| Sitemap index | Multiple sitemap files or sitemap size/count limits |
+| News/image/video sitemap | Only when the corresponding content is material and eligible |
+| `llms.txt` | Optional community convention; not an SEO, indexing, or AI-citation requirement |
+| `gemini.txt` | Not a recognised standard; do not create it as an SEO/GEO file |
+| `ads.txt` | A site selling programmatic display ads, using seller data supplied by ad operations |
+| `security.txt` | A site with a monitored security contact and disclosure process |
+| Webmaster verification | When the owner wants to verify a property; only use a service-issued token |
+
+Crawler access is reported separately for ordinary search, model training, AI/search retrieval, and user-triggered fetches. These choices have different consequences and must be confirmed against current vendor documentation and the site's WAF/CDN behavior. The audit never changes `robots.txt`, DNS, CDN, WAF, cache headers, redirects, or deployment configuration without explicit approval.
 
 Django users: audit rendered output, not raw templates containing `{% %}`. The scripts warn when they see template syntax.
 
@@ -131,6 +154,7 @@ Implementation after the audit
 - No fabricated metrics. Findings are labeled Verified or Assumption.
 - Official Google Search Central guidance is the reference for anything version-sensitive. Verify current details before relying on them (rich result eligibility, crawler names, thresholds).
 - Scripts avoid third-party dependencies, never touch API keys, and never overwrite project files.
+- Missing optional files are not presented as errors. The skill never invents webmaster verification tokens, ad seller IDs, security contacts, or business details.
 
 ## Testing checklist
 
@@ -139,15 +163,17 @@ Run through this after installing or modifying the skill.
 **Structure**
 - [ ] `SKILL.md` exists at the folder root with `name: nepal-seo-expert` and a `description`
 - [ ] Folder name matches the skill name; every file named in SKILL.md exists
-- [ ] All nine reference files exist and are non-empty
+- [ ] All ten reference files exist and are non-empty
 - [ ] No unfinished to-do notes or sample placeholder text left in the skill files
 
 **Scripts** (from the skill folder)
 - [ ] `python3 -m py_compile scripts/*.py` succeeds
+- [ ] `python3 -m unittest discover -s tests -p 'test_*.py'` succeeds
 - [ ] `python3 scripts/metadata-audit.py tests/sample-site` flags the issues in `bad.html`, `spa.html`, `template.html` and the duplicate pair, and reports no findings for `good.html`
 - [ ] `python3 scripts/schema-audit.py tests/sample-site/bad.html tests/sample-site/bad-local.html` reports invalid JSON, placeholders, 0,0 coordinates and missing properties
 - [ ] `python3 scripts/sitemap-audit.py tests/sample-site/sitemap-bad.xml` reports duplicates, mixed hosts and protocols, bad and future lastmod; `sitemap-good.xml` reports none
 - [ ] `--format json` output parses; `--help` works on all scripts
+- [ ] `python3 scripts/site-files-audit.py tests/site-files --format json` reports the applicability matrix, does not recommend `gemini.txt`, and keeps verification token values out of output
 - [ ] Scripts leave the audited folder unchanged (check `git status` or file timestamps)
 
 **Discovery and invocation (Claude Code)**
@@ -166,4 +192,4 @@ Run through this after installing or modifying the skill.
 
 ## Maintenance
 
-SEO guidance changes. Review the reference files whenever Google changes Search documentation, rich result eligibility, spam policies, or AI features. The files that most often need updates are `geo.md` (crawler names, platform behavior), `aeo.md` (structured data eligibility), and `technical-seo.md` (Core Web Vitals thresholds).
+SEO guidance changes. Review the reference files whenever Google changes Search documentation, rich result eligibility, spam policies, or AI features. The files that most often need updates are `geo.md` and `site-files-and-crawler-access.md` (crawler names and platform behavior), `aeo.md` (structured data eligibility), and `technical-seo.md` (Core Web Vitals thresholds).
